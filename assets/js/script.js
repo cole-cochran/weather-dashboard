@@ -1,4 +1,5 @@
 var API_key = '327acbd7d79e6254e6714764cab1a033';
+var previousSearch = JSON.parse(localStorage.getItem("WeatherAPI")) || []
 var weatherBtn = document.getElementById("get-weather");
 weatherBtn.addEventListener("click",function(){
     var city_name = document.getElementById("city_name").value
@@ -15,10 +16,23 @@ function getCoordinates(city_name){
             response.json()
             .then(function(data){
                 console.log(data)
+                previousSearch.push(city_name)
+                localStorage.setItem("WeatherAPI", JSON.stringify(previousSearch))
                 console.log(data.coord);
+                displayPreviousSearch();
                 var latitude = data.coord.lat;
                 var longitude = data.coord.lon;
                 getWeatherOneDay(latitude,longitude)
+                var htmlCode = `
+                <div class="container">
+                <h2>City: ${data.name}</h2>
+                <h3>Description:${data.weather[0].main}
+                <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" />
+                </h3>
+
+                </div>
+                `
+                document.getElementById("current-weather").innerHTML=htmlCode
                 }
             ) 
             } else {
@@ -36,13 +50,29 @@ function getWeatherOneDay(latitude,longitude){
             response.json()
             .then(function(data){
                 console.log(data);
-                }
+            var htmlCode = '';
+            var forecast = data.daily;
+            for (let i=1 ; i<6; i++){
+                htmlCode += `<div class="cards">
+                <h5> Temp: ${forecast[i].temp.min}</h5>
+                </div>`
+            }  
+            document.getElementById("five-day-forecast").innerHTML=htmlCode;
+        }
             ) 
             } else {
                 console.log("error");
             }
 })
 }
-
-
+function displayPreviousSearch(){
+    var previousSearch = JSON.parse(localStorage.getItem("WeatherAPI")) || []
+    var htmlCode = '';
+    for (let i=0; i<previousSearch.length; i++)
+    {
+        htmlCode+=`<li><button class="btn btn-secondary">${previousSearch[i]}</button></li>`
+    }
+    document.getElementById("previous-search").innerHTML=htmlCode;
+}
+displayPreviousSearch();
 
