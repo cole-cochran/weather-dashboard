@@ -1,3 +1,25 @@
-.cards{
-    min-width: 30%;
+
+
+.status-text {
+    bottom: 10px;
+}
+
+.status-text-main {
+    bottom: 35px;
+}
+
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#display-weather {
+    width: 100%;
+}
+
+#main {
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
